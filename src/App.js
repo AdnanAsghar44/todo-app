@@ -1,10 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./App.css"
 import TodoInput from './components/TodoInput'
 import Todolist from './components/Todolist';
 
+
+//To Get that From LocalStorage
+
+const getLocalItems = () => {
+  let list = localStorage.getItem('lists');
+  console.log(list);
+
+
+  if (list) {
+    return JSON.parse(localStorage.getItem('lists'));
+  } else {
+    return [];
+  }
+
+}
+
+
 const App = () => {
-  const [listTodo, setListTodo] = useState([]);
+  const [listTodo, setListTodo] = useState(getLocalItems());
+
+
   let addList = (inputText) => {
     if (inputText !== '')
       setListTodo([...listTodo, inputText]);
@@ -14,6 +33,12 @@ const App = () => {
     newListTodo.splice(key, 1)
     setListTodo([...newListTodo])
   }
+
+  //add data to localStorage
+  useEffect(() => {
+    localStorage.setItem('lists', JSON.stringify(listTodo))
+  }, [listTodo]);
+
 
   return (
     <div className="main-container">
